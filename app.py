@@ -27,3 +27,6 @@ def get_patient():
 
     # Convert DataFrame row to JSON
     return jsonify(patient_data.to_dict(orient="records")[0])
+
+if __name__ == "__main__":
+    app.run()
