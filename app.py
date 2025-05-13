@@ -1,15 +1,15 @@
 import pandas as pd
 from flask import Flask, request, jsonify
 
-# Load Fake EHR Data from Google sheet link
-file_path = "https://docs.google.com/spreadsheets/d/1GjPej9sUisGZbpE0psl3FD_PMZPJD5XlW3NNmGX0y4s/gviz/tq?tqx=out:csv"
-fake_EHR = pd.read_csv(file_path)
-
 # Create Flask API
 app = Flask(__name__)
 
 @app.route("/get_patient", methods=["GET"])
 def get_patient():
+    # Load Fake EHR Data from Google sheet link
+    file_path = "https://docs.google.com/spreadsheets/d/1GjPej9sUisGZbpE0psl3FD_PMZPJD5XlW3NNmGX0y4s/gviz/tq?tqx=out:csv"
+    fake_EHR = pd.read_csv(file_path)
+
     """Fetch patient data by ID"""
     patient_id = request.args.get("patient_id")  # Get patient ID from request
     if not patient_id:
