@@ -4,6 +4,16 @@ from flask import Flask, request, jsonify
 # Create Flask API
 app = Flask(__name__)
 
+@app.route("/", methods=["GET"])
+def home():
+    return """
+    <h1>Welcome to the EHR API Service</h1>
+    <p>Use the following endpoint to retrieve patient data:</p>
+    <code>/get_patient?patient_id=XXXXX</code>
+    <p>Example: <code>/get_patient?patient_id=15812753</code></p>
+    """
+
+
 @app.route("/get_patient", methods=["GET"])
 def get_patient():
     # Load Fake EHR Data from Google sheet link
@@ -26,7 +36,12 @@ def get_patient():
         return jsonify({"error": "Patient not found"}), 404
 
     # Convert DataFrame row to JSON
-    return jsonify(patient_data.to_dict(orient="records")[0])
+    record = patient_data.to_dict(orient="records")[0]
 
+    # Replace NaN with None for JSON compatibility
+    cleaned_record = {key: (None if pd.isna(value) else value) for key, value in record.items()}
+
+    return jsonify(cleaned_record)
+    
 if __name__ == "__main__":
     app.run()
